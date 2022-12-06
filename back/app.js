@@ -13,6 +13,8 @@ app.use((req, res, next) => {
 // Parser pour exploiter les données plus facilement
 app.use(bodyParser.json());
 
-// Code here
+app.use((req, res, next) => {
+  res.send('Message from server !')
+})
 
 module.exports = app;
