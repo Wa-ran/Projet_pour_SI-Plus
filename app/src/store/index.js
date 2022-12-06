@@ -1,9 +1,5 @@
 import { createStore } from 'vuex'
-
-const axios = require('axios');
-const requestConfig = axios.create({
-  baseURL: 'http://localhost:3000/',
-});
+import request from "./request"
 
 export default createStore({
   state: {
@@ -15,19 +11,19 @@ export default createStore({
     }
   },
   actions: {
-    async request(context, payload = null) {
-      return requestConfig(payload)
-      .then((res) => res.data)      
-      .catch((error = error.response) => {
-        if (!error) error = {
-          "config": {
-            "url": payload.url
-          },
-          "status": 500,
-        };
-        console.log(error);
+    async login(context, payload) {
+      // payload = { 
+      //   name: String,
+      //   password: String
+      // }
+
+      return context.dispatch("request", {
+        route: "user",
+        function: "login",
+        data: { user: payload },
       })
     },
+    ...request
   },
   getters: {
   },

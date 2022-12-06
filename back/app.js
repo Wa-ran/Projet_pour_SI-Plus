@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-
 const app = express();
+const controller = require("./controller");
 
 // CORS
 app.use((req, res, next) => {
@@ -10,11 +10,9 @@ app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
   next();
 });
-// Parser pour exploiter les données plus facilement
-app.use(bodyParser.json());
 
-app.use((req, res, next) => {
-  res.send('Message from server !')
-})
+app.use(bodyParser.json()); // Parser pour exploiter les données plus facilement
+
+app.use(controller);
 
 module.exports = app;
