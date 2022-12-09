@@ -1,21 +1,21 @@
 <template>
   <header>
-    <form @submit.prevent="login">
+    <form @submit.prevent="submit">
       <div>
         <input
           type="text"
           placeholder="Pseudo"
           aria-label="Pseudo"
-          name="name"
-          id="name"
-          v-model="name"
+          name="PageHeaderPseudo"
+          id="PageHeaderPseudo"
+          v-model="pseudo"
         />
         <input
           type="password"
           placeholder="Mot de passe"
           aria-label="Mot de passe"
-          name="password"
-          id="password"
+          name="PageHeaderPassword"
+          id="PageHeaderPassword"
           v-model="password"
         />
       </div>
@@ -31,11 +31,11 @@ import { ref } from "vue";
 import { useStore } from "vuex";
 const store = useStore();
 
-const name = ref('');
+const pseudo = ref('');
 const password = ref('');
-const login = function() {
+const submit = function() {
   store.dispatch("login", {
-    name: name.value,
+    pseudo: pseudo.value,
     password: password.value
   })
 }

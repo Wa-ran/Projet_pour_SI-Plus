@@ -1,10 +1,12 @@
-const { MongoUnexpectedServerResponseError } = require("mongodb");
 const mongo = require("../middlewares/mongo");
 
-exports.loginGET = async (data) => {
-  // Simple password verification
+exports.login = {
+  POST: async (data) => {
+  // Simple password verification, throw if invalid, return undefined
 
-  const mongoUser = await mongo("users", "findOne", { name: data.user.name });
-  if (data.user.password === mongoUser.password) return
-  else throw 'Wrong password !'
+    const mongoUser = await mongo("users", "findOne", { pseudo: data.user.pseudo });
+
+    if (!mongoUser) throw { cust: "This user doesn't exist..." }
+    if (data.user.password !== mongoUser.password) throw { cust: "Wrong password !" }
+  }
 }
