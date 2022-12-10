@@ -1,6 +1,6 @@
 <template>
   <div>
-    <button @click="charge">Charge</button>
+    <button @click="chargeArticles">Charge</button>
   </div>
 </template>
 
@@ -8,8 +8,9 @@
 import { useStore } from "vuex";
 const store = useStore();
 
-const charge = function() {
+const chargeArticles = async () => {
   store.dispatch("getMultipleArticles")
+  .then(res => store.commit("addArticles", { value: res }))
 }
 </script>
 

@@ -35,8 +35,10 @@ const pseudo = ref('');
 const password = ref('');
 const submit = function() {
   store.dispatch("login", {
-    pseudo: pseudo.value,
-    password: password.value
+    user: {
+      pseudo: pseudo.value,
+      password: password.value
+    }
   })
 }
 </script>

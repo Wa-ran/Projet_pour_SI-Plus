@@ -29,6 +29,7 @@ export default {
       };
 
       console.log(error);
+      throw error
     })
   },
 }

@@ -1,11 +1,11 @@
 <template>
   <div>
-    <ArticlesCreate />
+    <ArticlesForm />
     <div>
       <div>
         <ArticlesBlock
-          v-for="(article, index) in $store.state.articlesList"
-          :key="index"
+          v-for="article in $store.state.articlesList"
+          :key="article.creationDate"
           :article="article"
         />
       </div>
@@ -17,7 +17,7 @@
 </template>
 
 <script setup>
-import ArticlesCreate from "@/components/ArticlesCreate"
+import ArticlesForm from "@/components/ArticlesForm"
 import ArticlesBlock from "@/components/ArticlesBlock"
 import ArticlesChargeButton from "@/components/ArticlesChargeButton"
 </script>

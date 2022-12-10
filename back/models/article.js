@@ -4,8 +4,8 @@ module.exports = class Article {
     // data: {
     //   title: (String)
     //   content: (String)
-    //   creationDate: (Number) - millisecond since epoch
-    //   lastUpdateDate: (Number) - millisecond since epoch
+    //   creationDate: (Number) - milliseconds since epoch
+    //   lastUpdateDate: (Number) - milliseconds since epoch
     // }
     this.title = data.title;
     this.content = data.content;

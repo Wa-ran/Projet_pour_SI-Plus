@@ -2,7 +2,7 @@ const { MongoClient } = require('mongodb');
 const MDBpw = "strongpw"; // Password to Cluster0
 const MDBuser = "SI-Plus";
 
-module.exports = async (collection, method, query = {}, options = {}) => {
+module.exports = async (collection, method, ...args) => {
 // Perform a unique request toward database, return the data
 // collection (String) - indicate the collection
 // method (String) - method to perform on collection
@@ -15,7 +15,7 @@ module.exports = async (collection, method, query = {}, options = {}) => {
 
   try { // Try catch instead of then().catch() because not all methods are Promise based
     let res = [];
-    const MDBdata = await collection[method](query, {projection: { _id: 0 /* Exclude _id dy default */ }, ...options});
+    const MDBdata = await collection[method](...args);
 
     try { // If MDB return a Cursor, parse it into an Array, otherwise return the value
       await MDBdata.forEach(elem => res.push(elem));
