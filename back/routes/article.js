@@ -30,13 +30,15 @@ exports.one = {
 
     data.article.creationDate = Date.now(); // Prevent user to manipulate the creation order
 
-    // Only one image saved with creationDate as name
-    if (req.files[0]) fs.writeFile(`./images/${data.article.creationDate}.webp`, req.files[0].buffer, function(err) {
-      if(err) {
-          throw { cust: "File not saved." }
-      }
-    });
-    await mongo("articles", "insertOne", data.article);
+    await mongo("articles", "insertOne", data.article)
+    .then(() => {
+      // Only one image saved with creationDate as name
+      if (req.files[0]) fs.writeFile(`./images/${data.article.creationDate}.webp`, req.files[0].buffer, function(err) {
+        if(err) {
+            throw { cust: "File not saved." }
+        }
+      });
+    })
   },
   PUT: async (data, req) => {
   // Insert an article
@@ -47,14 +49,16 @@ exports.one = {
   //   }
   // }
 
-    // Only one image modified with creationDate as name
-    if (req.files[0]) fs.writeFile(`./images/${data.article.creationDate}.webp`, req.files[0].buffer, function(err) {
-      if(err) {
-          throw { cust: "File not saved." }
-      }
-    });
     data.article.lastUpdateDate = Date.now();
-    await mongo("articles", "replaceOne", { creationDate: data.article.creationDate }, data.article);
+    await mongo("articles", "replaceOne", { creationDate: data.article.creationDate }, data.article)
+    .then(() => {
+      // Only one image modified with creationDate as name
+      if (req.files[0]) fs.writeFile(`./images/${data.article.creationDate}.webp`, req.files[0].buffer, function(err) {
+        if(err) {
+            throw { cust: "File not saved." }
+        }
+      });
+    })
   },
   DELETE: async (data) => {
   // Remove an article
@@ -63,7 +67,10 @@ exports.one = {
   //     creationDate: (Number) - milliseconds since epoch
   //   }
   // }
-    await mongo("articles", "deleteOne", { creationDate: data.article.creationDate });
+    await mongo("articles", "deleteOne", { creationDate: data.article.creationDate })
+    .then(() => {
+      fs.unlinkSync(`./images/${data.article.creationDate}.webp`)
+    })
   }
 }
 

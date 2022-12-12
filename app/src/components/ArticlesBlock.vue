@@ -2,7 +2,7 @@
   <div class="container">
     <div>
       <img
-        :src="`${constants.serverURL}images/${props.article.creationDate}.webp`" alt=""
+        :src="`${constants.serverURL}images/${props.article.creationDate}.webp?cache=${props.article.lastUpdateDate}`" alt=""
         onerror='this.style.display = "none"'
       >
     </div>
