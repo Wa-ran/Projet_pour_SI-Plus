@@ -3,12 +3,19 @@ const router = express.Router();
 
 module.exports = router.use('/:route/(:function)?/(:data)?', async (req, res, next) => {
   try {
-    // "data" is the object in which we store and update all the needed infos until completion of the request
-    // In GET request, "data" is stored in the URL (req.params.data), otherwise in the req.body
-    const data = req.params?.data ? JSON.parse(req.params.data) : req.body;
+    let data = {}; // "data" is the object in which we store and update all the needed infos until completion of the request
+
+    if (req.params?.data) data = JSON.parse(req.params.data) // In GET request, "data" is stored in the URL (req.params.data) and need to be parsed
+    else try { // In case where formData is received, we need to parse each non-file objects (they're send as Strings), excluding files
+      for ([key, value] of Object.entries(req.body)) {
+        if (key !== "image") data[key] = JSON.parse(value);
+      }
+    } catch (error) { // When simple JSON is received
+      data = req.body
+    }
 
     // We'll work with models created from the objects stored in "data"
-    // TODO_ At the creation, sanitization can be performed
+    // TODO : At the creation, sanitization can be performed
     try {
       for (let [objName, objBody] of Object.entries(data)) {
         const model = require(`../models/${objName}`);
@@ -23,7 +30,7 @@ module.exports = router.use('/:route/(:function)?/(:data)?', async (req, res, ne
 
     // Call the correct module's function, which is in fact an object containing methods named according to the HTTP method :
     // Pattern : In route.js -> exports.function : { METHOD(data) }
-    await route[req.params.function][req.method](data)
+    await route[req.params.function][req.method](data, req)
     .then((response) => {
       if (response) res.send(response.beforeSend?.() ?? response)
       else res.sendStatus(200) // If nothing to return, send OK

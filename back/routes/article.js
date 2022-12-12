@@ -1,4 +1,6 @@
 const mongo = require("../middlewares/mongo");
+const multer = require("../middlewares/multer");
+const fs = require('fs');
 
 exports.one = {
   GET: async (data) => {
@@ -11,7 +13,6 @@ exports.one = {
   const query = {
     creationDate: { $lte: data.article.creationDate }, // Corresponding to the date or before
   };
-  console.log(query)
   const options = {
     sort: { $natural: -1 }, // Search by the end to get the most recent
     projection: { _id: 0 }, // Exclude _id
@@ -26,10 +27,18 @@ exports.one = {
   //     password: (String)
   //   }
   // }
+
     data.article.creationDate = Date.now(); // Prevent user to manipulate the creation order
+
+    // Only one image saved with creationDate as name
+    if (req.files[0]) fs.writeFile(`./images/${data.article.creationDate}.webp`, req.files[0].buffer, function(err) {
+      if(err) {
+          throw { cust: "File not saved." }
+      }
+    });
     await mongo("articles", "insertOne", data.article);
   },
-  PUT: async (data) => {
+  PUT: async (data, req) => {
   // Insert an article
   // data: {
   //   article: {
@@ -37,6 +46,13 @@ exports.one = {
   //     password: (String)
   //   }
   // }
+
+    // Only one image modified with creationDate as name
+    if (req.files[0]) fs.writeFile(`./images/${data.article.creationDate}.webp`, req.files[0].buffer, function(err) {
+      if(err) {
+          throw { cust: "File not saved." }
+      }
+    });
     data.article.lastUpdateDate = Date.now();
     await mongo("articles", "replaceOne", { creationDate: data.article.creationDate }, data.article);
   },

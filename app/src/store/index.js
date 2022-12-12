@@ -107,15 +107,18 @@ export default createStore({
     //   article: {
     //     title: (String)
     //     content: (String)
-    //   }
+    //   },
+    //   image: (file)
     // }
+      const formData = new FormData();
+      for (let [key, value] of Object.entries(payload)) {
+        formData.append(key, key === "image" ? value : JSON.stringify(value));
+      }
       return await context.dispatch("request", {
         method: "POST",
         route: "article",
         function: "one",
-        data: {
-          article: payload.article
-        },
+        data: formData,
       })
       .then(() => context.dispatch("getArticle"))
     },
@@ -126,15 +129,18 @@ export default createStore({
     //     title: (String)
     //     content: (String)
     //     creationDate: (Number) - milliseconds sonce epoch
-    //   }
+    //   },
+    //   image: (file)
     // }
+      const formData = new FormData();
+      for (let [key, value] of Object.entries(payload)) {
+        formData.append(key, key === "image" ? value : JSON.stringify(value));
+      }
       return await context.dispatch("request", {
         method: "PUT",
         route: "article",
         function: "one",
-        data: {
-          article: payload.article
-        },
+        data: formData,
       })
       .then(() => context.dispatch("getArticle", payload))
     },

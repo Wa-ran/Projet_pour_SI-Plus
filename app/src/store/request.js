@@ -1,6 +1,8 @@
 const axios = require('axios');
+
+import constants from '@/constants';
 const requestConfig = {
-  baseURL: 'http://localhost:3000/',
+  baseURL: constants.serverURL,
 };
 
 export default {

@@ -1,7 +1,10 @@
 <template>
   <div class="container">
     <div>
-      <img src="" alt="">
+      <img
+        :src="`${constants.serverURL}images/${props.article.creationDate}.webp`" alt=""
+        onerror='this.style.display = "none"'
+      >
     </div>
     <div>
       <h2>
@@ -38,6 +41,8 @@ const props = defineProps({
 import { useStore } from "vuex";
 const store = useStore();
 
+import constants from "@/constants";
+
 const deleteArticle = function() {
   store.dispatch("deleteArticle", { article: props.article })
 };
@@ -57,5 +62,10 @@ const updateArticle = function() {
 <style lang="scss" scoped>
 .container {
   border: solid 1px orangered;
+}
+
+img {
+  width: 100px;
+  height: 100px;
 }
 </style>

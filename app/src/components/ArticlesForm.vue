@@ -1,26 +1,34 @@
 <template>
   <div>
-    <button @click="reset">
+    <button @click="showForm ? reset() : showForm = true">
       {{ showForm ? "Annuler" : "Créer un post" }}
     </button>
     <form
       v-show="showForm"
       @submit.prevent="submit"
     >
-      <textarea
-        placeholder="Titre"
-        aria-label="Titre"
-        name="title"
-        id="ArticleCreateTitle"
-        v-model="title"
-      />
-      <textarea
-        placeholder="Contenu"
-        aria-label="Titre"
-        name="content"
-        id="ArticleCreateContent"
-        v-model="content"
-      />
+      <div>
+        <inputImage
+        v-if="showForm"
+          @fileChange="image = $event"
+        />
+      </div>
+      <div>
+        <textarea
+          placeholder="Titre"
+          aria-label="Titre"
+          name="title"
+          id="ArticleCreateTitle"
+          v-model="title"
+        />
+        <textarea
+          placeholder="Contenu"
+          aria-label="Titre"
+          name="content"
+          id="ArticleCreateContent"
+          v-model="content"
+        />
+      </div>
       <button type="submit">
         Envoyer
       </button>
@@ -29,6 +37,8 @@
 </template>
 
 <script setup>
+import inputImage from "./inputImage.vue";
+
 import { ref, watch } from "vue";
 import { useStore } from "vuex";
 const store = useStore();
@@ -37,13 +47,15 @@ const showForm = ref(false);
 const title = ref("");
 const content = ref("");
 const creationDate = ref("");
+const image = ref("");
 
 const create = async () => {
   await store.dispatch("postArticle", {
     article: {
       title: title.value,
-      content: content.value
-    }
+      content: content.value,
+    },
+    images: image.value,
   })
   .then(res => store.commit("addArticles", { value: res }))
 }
@@ -53,16 +65,15 @@ const update = async () => {
       title: title.value,
       content: content.value,
       creationDate: creationDate.value,
-    }
+    },
+    image: image.value,
   })
   .then(res => store.commit("modifyArticle", { value: res }))
 }
 
 const reset = () => { // Hide form and don't save changes
   showForm.value = false;
-  title.value = "";
-  content.value = "";
-  creationDate.value = "";
+  title.value = content.value = creationDate.value = "";
 };
 
 const submit = async () => {
