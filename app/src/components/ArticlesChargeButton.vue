@@ -1,6 +1,6 @@
 <template>
   <div>
-    <button @click="chargeArticles">Charge</button>
+    <button @click="chargeArticles">Afficher 5 de plus</button>
   </div>
 </template>
 

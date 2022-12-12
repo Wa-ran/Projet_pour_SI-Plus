@@ -36,7 +36,7 @@ const filePreview = (event) => {
 
 <style lang="scss" scoped>
 .input[type=file] {
-  width: 200px;
-  height: 200px;
+  max-width: 100%;
+  max-height: 100%;
 }
 </style>

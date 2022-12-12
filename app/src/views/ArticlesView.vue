@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div class="container">
     <ArticlesForm />
-    <div>
+    <main>
       <div>
         <ArticlesBlock
           v-for="article in $store.state.articlesList"
@@ -12,7 +12,7 @@
       <div>
         <ArticlesChargeButton />
       </div>
-    </div>
+    </main>
   </div>
 </template>
 
@@ -22,6 +22,11 @@ import ArticlesBlock from "@/components/ArticlesBlock"
 import ArticlesChargeButton from "@/components/ArticlesChargeButton"
 </script>
 
-<style lang="scss" scoped>
-
+<style lang="scss">
+body {
+  margin: 0;
+}
+main {
+  padding: 1rem 2.5%;
+}
 </style>
