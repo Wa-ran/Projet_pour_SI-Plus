@@ -33,7 +33,7 @@ exports.one = {
     .then(() => {
       // Only one image saved with creationDate as name
       if (req.files[0]) fs.writeFile(`./images/${data.article.creationDate}.webp`, req.files[0].buffer, function(err) {
-        if(err) {
+        if (err) {
           throw { cust: "File not saved." }
         }
       });
@@ -48,7 +48,6 @@ exports.one = {
   //     creationDate: (Number) - milliseconds since epoch
   //   }
   // }
-
     data.article.lastUpdateDate = Date.now();
     await mongo("articles", "replaceOne", { creationDate: data.article.creationDate }, data.article)
     .then(() => {
@@ -72,8 +71,13 @@ exports.one = {
       try {
         fs.unlinkSync(`./images/${data.article.creationDate}.webp`)
       } catch (error) {
+        // throw { cust: "Article deleted but image not found" }
         return
       }
+    })
+    .catch((error) => {
+      console.log(error);
+      throw { cust: "Article not found" }
     })
   }
 }
@@ -101,4 +105,21 @@ exports.multiple = {
 
     return await mongo("articles", "find", query, options);
   }
+}
+
+exports.image = {
+  DELETE: async (data, req) => {
+  // Delete an image
+  // data: {
+  //   article: {
+  //     creationDate: (Number) - milliseconds since epoch
+  //   }
+  // }
+
+    try {
+      fs.unlinkSync(`./images/${data.article.creationDate}.webp`)
+    } catch (error) {
+      throw { cust: "Image not found" }
+    }
+  },
 }

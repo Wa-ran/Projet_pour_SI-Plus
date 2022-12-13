@@ -1,0 +1,250 @@
+# This file can be treated by Swagger Editor (https://editor.swagger.io/?_ga=2.221532312.1632111664.1670694787-542338927.1670343091)
+openapi: 3.0.3
+info:
+  title: Projet pour SI-PLUS - API
+  description: |-
+    Le projet consiste en la création d'une page web permettant à un utilisateur de manipuler des articles.
+  termsOfService: http://swagger.io/terms/
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.11
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io
+tags:
+  - name: user
+    description: Everything about user
+  - name: article
+    description: Manipulation of article
+paths:
+  /user:
+    post:
+      tags:
+        - user
+      summary: Login
+      description: Simple login
+      operationId: login
+      requestBody:
+        description: Just need the pseudo and password
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: Either the pseudo or the password is wrong
+        '404':
+          description: Bad URL
+        '500':
+          description: Server error
+  /article/one/data:
+    get:
+      tags:
+        - article
+      summary: Get one article
+      description:
+        |-
+          Get an article by creationDate, or if not found, the most recent before the date.
+          
+          _If data is not provided, return the most recent article by the date of the request_
+      operationId: getArticle
+      parameters:
+        - name: data
+          required: false
+          in: query
+          description: Only need an article containing creationDate
+          schema:
+            $ref: '#/components/schemas/Data'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Article'
+        '404':
+          description: Bad URL
+        '500':
+          description: Server error
+    post:
+      tags:
+        - article
+      summary: Create an article
+      description:
+        |-
+          Create an article using only title and content _(creationDate is determined by the server)_
+      operationId: postArticle
+      requestBody:
+        required: true
+        description: Only need an article containing title and content, accept one image
+        content: 
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Article'
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                article:
+                  $ref: '#/components/schemas/Article'
+                image:
+                  $ref: '#/components/schemas/Image'
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: Image couldn't be writed
+        '404':
+          description: Bad URL
+        '500':
+          description: Server error
+    put:
+      tags:
+        - article
+      summary: Modify an article
+      description:
+        |-
+          Modify an article using title, content and creationDate _(lastUpdateDate is determined by the server)_
+      operationId: putArticle
+      requestBody:
+        required: true
+        description: Only need an article containing title, content and creationDate, accept one image
+        content: 
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Article'
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                article:
+                  $ref: '#/components/schemas/Article'
+                image:
+                  $ref: '#/components/schemas/Image'
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: Artcile not found or image couldn't be writed
+        '404':
+          description: Bad URL
+        '500':
+          description: Server error
+    delete:
+      tags:
+        - article
+      summary: Delete one article
+      description: Delete an article by creationDate
+      operationId: deleteArticle
+      parameters:
+        - name: data
+          required: true
+          in: query
+          description: Only need an article containing creationDate
+          schema:
+            $ref: '#/components/schemas/Data'
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: Couldn't delete the article
+        '404':
+          description: Bad URL
+        '500':
+          description: Server error
+  /article/multiple/data:
+    get:
+      tags:
+        - article
+      summary: Get multiple articles
+      description:
+        |-
+          Get multiple articles according to a filter _(optionnal)_ :
+          
+          creationDate : get the most recents before the date.
+          _If not provided, return the most recents articles by the date of the request_
+          
+          limit : the number of articles to get, limited to 5.
+          _If not provided, return 1 article_
+      operationId: getMultipleArticles
+      parameters:
+        - name: data
+          required: false
+          in: query
+          description: Only need a filter
+          schema:
+            $ref: '#/components/schemas/Data'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Article'
+        '404':
+          description: Bad URL
+        '500':
+          description: Server error
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        pseudo:
+          type: string
+          example: "guest"
+        password:
+          type: string
+          example: "pass"
+    Article:
+      type: object
+      description:
+        |-
+          creationDate is used like an Id _(primary key)_
+      properties:
+        title:
+          type: string
+          example: "title"
+        content:
+          type: string
+          example: "content"
+        creationDate:
+          type: number
+          example: 1670516107727
+          description: Number of milliseconds since "epoch", correspond to the creation date of the article
+        lastUpdateDate:
+          type: number
+          example: 1670516185624
+          description: Number of milliseconds since "epoch", correspond to the last modification date 
+    Filter:
+      type: object
+      description: Only needed to get multiple articles
+      properties:
+        date:
+          type: number
+          example: 1670516107727
+          description: Number of milliseconds since "epoch"
+        limit:
+          type: number
+          example: 3
+          description: A number between 1 and 5
+    Image:
+      type: string
+      format: binary
+      description: An image file
+    Data:
+      type: object
+      description: A wrapper containing the objects needed by each route
+      properties:
+        user:
+          $ref: '#/components/schemas/User'
+        article:
+          $ref: '#/components/schemas/Article'
+        filter:
+          $ref: '#/components/schemas/Filter'

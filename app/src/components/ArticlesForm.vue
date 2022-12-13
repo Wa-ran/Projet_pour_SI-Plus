@@ -12,7 +12,8 @@
     >
       <div>
         <inputImage
-        v-if="showForm"
+          :key="store.state.ArticlesForm_Update?.creationDate"
+          :actualArticle="store.state.ArticlesForm_Update"
           @fileChange="image = $event"
         />
       </div>
@@ -36,7 +37,7 @@
         <button type="submit">
           Envoyer
         </button>
-        <button @click="reset">
+        <button @click.prevent="reset">
           Annuler
         </button>
       </div>
@@ -81,7 +82,7 @@ const update = async () => {
 
 const reset = () => { // Hide form and don't save changes
   showForm.value = false;
-  title.value = content.value = creationDate.value = "";
+  title.value = content.value = creationDate.value = image.value = "";
 };
 
 const submit = async () => {
@@ -103,7 +104,7 @@ watch(() => store.state.ArticlesForm_Update, () => {
 
 <style lang="scss" scoped>
 .container.showForm {
-  border-bottom: solid 1px orangered;
+  border-bottom: solid 2px black;
   padding-bottom: 0.25rem;
 }
 .textInputsContainer {

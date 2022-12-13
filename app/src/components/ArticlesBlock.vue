@@ -42,6 +42,7 @@
 
 <script setup>
 import { ref, defineProps, nextTick } from "vue";
+import constants from "@/constants";
 
 const props = defineProps({
   article: {
@@ -52,23 +53,26 @@ const props = defineProps({
 import { useStore } from "vuex";
 const store = useStore();
 
-import constants from "@/constants";
-
 const imageDisplay = ref(true);
 
 const deleteArticle = function() {
   store.dispatch("deleteArticle", { article: props.article })
 };
-const updateArticle = function() {
+const updateArticle = function() { // Reset to be sure to trigger watchers
   store.commit("mutateStateKey", {
     key: "ArticlesForm_Update",
-    value: null // Reset to be sure to trigger watchers
+    value: null
   });
   nextTick(() => store.commit("mutateStateKey", {
       key: "ArticlesForm_Update",
       value: props.article
     })
   )
+  window.scrollTo({
+  top: 0,
+  left: 0,
+  behavior: 'smooth'
+})
 }
 </script>
 

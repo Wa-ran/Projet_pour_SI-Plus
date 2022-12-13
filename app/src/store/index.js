@@ -83,7 +83,7 @@ export default createStore({
     // Get the last created article if not sending data
     // payload: {
     //   article: {
-    //     creationDate: (Number) - milliseconds sonce epoch
+    //     creationDate: (Number) - milliseconds since epoch
     //   }
     // }
       return await context.dispatch("request", {
@@ -137,7 +137,7 @@ export default createStore({
     //   article: {
     //     title: (String)
     //     content: (String)
-    //     creationDate: (Number) - milliseconds sonce epoch
+    //     creationDate: (Number) - milliseconds since epoch
     //   },
     //   image: (file)
     // }
@@ -154,10 +154,10 @@ export default createStore({
       .then(() => context.dispatch("getArticle", payload))
     },
     async deleteArticle(context, payload) {
-    // Create an article and return it, throw if creation fail
+    // Delete an article, throw if deletion fail
     // payload: { 
     //   article: {
-    //     creationDate: (Number) - milliseconds sonce epoch
+    //     creationDate: (Number) - milliseconds since epoch
     //   }
     // }
       await context.dispatch("request", {
@@ -170,6 +170,22 @@ export default createStore({
       })
       .then(() => context.commit("deleteArticles", [payload.article.creationDate]))
     },
+    async deleteArticleImage(context, payload) {
+      // Delete an image, throw if deletion fail
+      // payload: { 
+      //   article: {
+      //     creationDate: (Number) - milliseconds since epoch
+      //   }
+      // }
+        await context.dispatch("request", {
+          method: "DELETE",
+          route: "article",
+          function: "image",
+          data: {
+            article: payload.article
+          },
+        })
+      },
     ...request
   },
   getters: {
