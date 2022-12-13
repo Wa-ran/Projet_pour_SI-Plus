@@ -14,5 +14,6 @@ exports.login = {
 
     if (!mongoUser) throw { cust: "This user doesn't exist..." }
     if (data.user.password !== mongoUser.password) throw { cust: "Wrong password !" }
+    return
   }
 }

@@ -1,5 +1,4 @@
 const mongo = require("../middlewares/mongo");
-const multer = require("../middlewares/multer");
 const fs = require('fs');
 
 exports.one = {
@@ -19,12 +18,12 @@ exports.one = {
   };
     return await mongo("articles", "findOne", query, options);
   },
-  POST: async (data) => {
+  POST: async (data, req) => {
   // Insert an article
   // data: {
   //   article: {
-  //     pseudo: (String)
-  //     password: (String)
+  //     title: (String)
+  //     content: (String)
   //   }
   // }
 
@@ -35,7 +34,7 @@ exports.one = {
       // Only one image saved with creationDate as name
       if (req.files[0]) fs.writeFile(`./images/${data.article.creationDate}.webp`, req.files[0].buffer, function(err) {
         if(err) {
-            throw { cust: "File not saved." }
+          throw { cust: "File not saved." }
         }
       });
     })
@@ -44,8 +43,9 @@ exports.one = {
   // Insert an article
   // data: {
   //   article: {
-  //     pseudo: (String)
-  //     password: (String)
+  //     title: (String)
+  //     content: (String)
+  //     creationDate: (Number) - milliseconds since epoch
   //   }
   // }
 
@@ -55,7 +55,7 @@ exports.one = {
       // Only one image modified with creationDate as name
       if (req.files[0]) fs.writeFile(`./images/${data.article.creationDate}.webp`, req.files[0].buffer, function(err) {
         if(err) {
-            throw { cust: "File not saved." }
+          throw { cust: "File not saved." }
         }
       });
     })
@@ -69,7 +69,11 @@ exports.one = {
   // }
     await mongo("articles", "deleteOne", { creationDate: data.article.creationDate })
     .then(() => {
-      fs.unlinkSync(`./images/${data.article.creationDate}.webp`)
+      try {
+        fs.unlinkSync(`./images/${data.article.creationDate}.webp`)
+      } catch (error) {
+        return
+      }
     })
   }
 }

@@ -12,7 +12,7 @@ app.use(bodyParser.json()); // Parser pour exploiter les données plus facilemen
 
 app.use('/images', express.static(path.join(__dirname, '/images')));
 
-app.use(multer({ // Use of multer only to store files in memory, they'll be handle after in routes (accessible with req.files)
+app.use(multer({ // Use of "multer" only to store files in memory, they'll be handle with "fs" after in routes (accessible with req.files)
   storage: multer.memoryStorage(),
   limits: {
     fieldSize: 2097152 // 2BM max

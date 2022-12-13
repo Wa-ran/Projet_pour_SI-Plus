@@ -1,10 +1,11 @@
 <template>
   <article>
-    <div v-if="imageDisplay" class="imageContainer">
+    <div v-show="imageDisplay" class="imageContainer">
       <img
         :src="`${constants.serverURL}images/${props.article.creationDate}.webp?key=${props.article.creationDate + props.article.lastUpdateDate}`"
         alt=""
         @error="imageDisplay = false"
+        @load="imageDisplay = true"
         :key="props.article.lastUpdateDate"
       >
     </div>
@@ -22,10 +23,10 @@
       <footer>
         <div class="dateContainer">
           <div>
-            {{ `Créé le : ${new Date(props.article.creationDate).toLocaleDateString('fr')}` }}
+            {{ `Créé le : ${new Date(props.article.creationDate).toLocaleDateString('fr')} à ${new Date(props.article.creationDate).toLocaleTimeString('fr')}` }}
           </div>
           <div>
-            {{ props.article.lastUpdateDate ? `Dernier message le : ${new Date(props.article.lastUpdateDate).toLocaleDateString('fr')}` : "" }}
+            {{ props.article.lastUpdateDate ? `Dernier message le : ${new Date(props.article.lastUpdateDate).toLocaleDateString('fr')} à  ${new Date(props.article.lastUpdateDate).toLocaleTimeString('fr')}` : "" }}
           </div>
         </div>
         <button @click="updateArticle">

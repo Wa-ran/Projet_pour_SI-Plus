@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container">
     <input
       type="file"
       name="image"
@@ -7,11 +7,11 @@
       accept=".png, .jpeg, .jpg, .webp"
       @change="filePreview"
     />
-    <div v-if="path">
+    <div v-if="path" class="previewContainer">
+      <img v-if="path" :src="path" alt="Votre image">
       <button @click="path = null">
         Annuler
       </button>
-      <img v-if="path" :src="path" alt="Votre image">
     </div>
   </div>
 </template>
@@ -35,8 +35,30 @@ const filePreview = (event) => {
 </script>
 
 <style lang="scss" scoped>
+.container {
+  margin: 1rem auto;
+  padding: 0.5rem;
+  width: fit-content;
+  border: solid 1px rgba($color: orangered, $alpha: 0.5);
+  border-radius: 0.5rem;
+}
+.previewContainer {
+  display: flex;
+  flex-direction: column;
+}
 .input[type=file] {
   max-width: 100%;
   max-height: 100%;
+}
+img {
+  max-width: 150px;
+  max-height: 150px;
+  border: solid 1px black;
+  margin: 1rem auto;
+  background-color: #fff;
+}
+button {
+  max-width: fit-content;
+  margin-left: auto;
 }
 </style>

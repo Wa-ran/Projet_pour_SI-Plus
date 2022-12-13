@@ -70,6 +70,13 @@ export default createStore({
       }))
       .then(() => context.dispatch("getMultipleArticles"))
       .then(res => context.commit("addArticles", { value: res }))
+      .catch(err => {
+        alert(err.response.data);
+        context.commit("mutateStateKey", {
+          key: "connected",
+          value: false
+        })
+      })
     },
     async getArticle(context, payload) {
     // Get an article by creationDate, or the most recent before the date if not found

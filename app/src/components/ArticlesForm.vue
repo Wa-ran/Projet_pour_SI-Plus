@@ -1,7 +1,10 @@
 <template>
-  <div>
-    <button @click="showForm ? reset() : showForm = true">
-      {{ showForm ? "Annuler" : "Créer un post" }}
+  <div
+    class="container"
+    :class="showForm ? 'showForm' : ''"
+  >
+    <button v-if="!showForm" @click="showForm = true">
+      Créer un post
     </button>
     <form
       v-show="showForm"
@@ -13,7 +16,7 @@
           @fileChange="image = $event"
         />
       </div>
-      <div>
+      <div class="textInputsContainer">
         <textarea
           placeholder="Titre"
           aria-label="Titre"
@@ -29,9 +32,14 @@
           v-model="content"
         />
       </div>
-      <button type="submit">
-        Envoyer
-      </button>
+      <div class="buttonsContainer">
+        <button type="submit">
+          Envoyer
+        </button>
+        <button @click="reset">
+          Annuler
+        </button>
+      </div>
     </form>
   </div>
 </template>
@@ -55,7 +63,7 @@ const create = async () => {
       title: title.value,
       content: content.value,
     },
-    images: image.value,
+    image: image.value,
   })
   .then(res => store.commit("addArticles", { value: res }))
 }
@@ -94,5 +102,25 @@ watch(() => store.state.ArticlesForm_Update, () => {
 </script>
 
 <style lang="scss" scoped>
-
+.container.showForm {
+  border-bottom: solid 1px orangered;
+  padding-bottom: 0.25rem;
+}
+.textInputsContainer {
+  display: flex;
+  justify-content: center;
+  textarea {
+    margin: 0.25rem;
+    border: solid 1px orangered;
+    border-radius: 0.25rem;
+  }
+}
+.buttonsContainer {
+  width: 100%;
+  display: flex;
+  justify-content: end;
+  button {
+    margin: 0.25rem;
+  }
+}
 </style>
